@@ -20,9 +20,8 @@ jobs:
       - name: Run tests
         run: mvn test
       - name: Generate Docker image
-        run: mvn spring-boot:build-image \
-          --DskipTests \
-          --Dspring-boot.build-image.imageName=${{ secrets.DOCKERHUB_USERNAME }}/anuncios:latest
+        run: mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=${{ secrets.DOCKERHUB_USERNAME }}/anuncios:latest
+
       - name: Login to DockerHub
         run: docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
       - name: Push image to DockerHub
@@ -40,10 +39,4 @@ jobs:
                 tenant-id: ${{ secrets.AZURE_TENANT_ID }}
                 subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
             - name: 'Run az commands to deploy container'
-              run: |
-                az container create \
-                  --resource-group ${{ secrets.AZURE_GROUP }} \
-                  --name anuncios \
-                  --image ${{ secrets.DOCKERHUB_USERNAME }}/anuncios:latest \
-                  --dns-name-label ais-anuncios \
-                  --ports 8080
+              run: az container create --resource-group ${{ secrets.AZURE_GROUP }} --name anuncios --image ${{ secrets.DOCKERHUB_USERNAME }}/anuncios:latest --dns-name-label ais-anuncios --ports 8080
