@@ -32,3 +32,6 @@ az container show  \
     --out table
 ```
 
+mvn spring-boot:build-image \
+    -DskipTests \
+    -Dspring-boot.build-image.imageName=pko22/anuncios:v2
